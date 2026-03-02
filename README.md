@@ -43,12 +43,22 @@
 
 ### 2. 作为 AI Agent Skill 安装
 
-本项目完美支持 OpenClaw、Claude Code 等 AI 编码智能体框架。推荐使用 [openskills](https://github.com/openclaw/openskills) CLI 进行一键安装：
+#### 一、标准安装（荐）：
+建议参考使用类似方式安装（注意我们的skill在里面一层）：
 
 ```bash
-# 全局安装该技能，供所有 Agent 项目使用
-openskills install https://github.com/cclank/lanshu-waytovideo.git -g
+npx skills add https://github.com/cclank/lanshu-waytovideo --skill jianying-video-gen
 ```
+
+#### 二、龙虾（OpenClaw）安装
+对话：
+
+> **User**: 请帮我安装该skill：https://github.com/cclank/lanshu-waytovideo/tree/main/jianying-video-gen ，并指导我进行初始化配置
+> **OpenClaw**: (收到指令后会自动下载、挂载该 Skill，并提示你需要去处理 cookies.json 等前置条件)
+
+---
+
+### 3. 开始自动生成 
 
 安装完成后，在你的对话界面中直接向 Agent 下达自然语言指令即可：
 
