@@ -55,17 +55,28 @@ async def safe_click(page, locator_or_selector, label, timeout=5000):
         print(f"  ❌ {label}: {e}")
         return False
 
-async def run(prompt: str, duration: str = "10s", ratio: str = "横屏", model: str = "Seedance 2.0", dry_run: bool = False, ref_video: str = None):
+async def run(prompt: str, duration: str = "10s", ratio: str = "横屏", model: str = "Seedance 2.0", dry_run: bool = False, ref_video: str = None, ref_image: str = None):
     global DEBUG_SCREENSHOTS
     DEBUG_SCREENSHOTS = dry_run
-    mode_label = "V2V (参考视频)" if ref_video else "T2V (文生视频)"
+    if ref_image:
+        mode_label = "I2V (图生视频)"
+    elif ref_video:
+        mode_label = "V2V (参考视频)"
+    else:
+        mode_label = "T2V (文生视频)"
     print(f"🚀 Starting Playwright + Chromium (headless)... [{mode_label}]")
     if ref_video and not os.path.exists(ref_video):
         print(f"❌ 参考视频文件不存在: {ref_video}")
         return
+    if ref_image and not os.path.exists(ref_image):
+        print(f"❌ 参考图片文件不存在: {ref_image}")
+        return
     if ref_video:
         size_mb = os.path.getsize(ref_video) / (1024 * 1024)
         print(f"📎 参考视频: {ref_video} ({size_mb:.1f}MB)")
+    if ref_image:
+        size_kb = os.path.getsize(ref_image) / 1024
+        print(f"🖼️ 参考图片: {ref_image} ({size_kb:.0f}KB)")
     if dry_run:
         print("⚠️ DRY-RUN MODE: will fill form but NOT click '开始创作'")
 
@@ -109,6 +120,102 @@ async def run(prompt: str, duration: str = "10s", ratio: str = "横屏", model: 
         await safe_click(page, page.locator('text=新建').first, '新建')
         await page.wait_for_timeout(3000)
         await screenshot(page, '3_5_new_page')
+
+        # === Step 3.6: 上传参考图片 (仅 I2V 模式) ===
+        if ref_image:
+            print(f"🖼️ [Step 3.6] Uploading reference image: {os.path.basename(ref_image)}")
+
+            # 点击输入区域的 "+" 按钮 (工具栏最左边)
+            # 点击输入区域的 "+" 按钮 (包含 lucide-plus SVG，在 "模式" 左侧)
+            # DOM 结构显示它和 "模式" 都在 .configButtons 容器内
+            plus_clicked = False
+            try:
+                # 寻找包含 "模式" 文本最近的祖先，且内部有 lucide-plus 图标的按钮
+                plus_locator = page.locator('div:has(> div > span:text("模式"))').locator('..').locator('button:has(svg.lucide-plus), div[class*="uploadContainer"] button').first
+                
+                box = await plus_locator.bounding_box()
+                if not box:
+                    # 备用方案：全局找 lucide-plus 但在 toolbar 区域内
+                    plus_locator = page.locator('button:has(svg.lucide-plus)').first
+                    
+                await plus_locator.click(timeout=3000)
+                plus_clicked = True
+                print(f"  + 按钮: OK (Playwright locator)")
+            except Exception as e:
+                print(f"  + 按钮: locator_fail ({e})")
+                
+            if not plus_clicked:
+                # 最后的 evaluate 兜底方案
+                plus_result = await page.evaluate('''() => {
+                    const svgs = Array.from(document.querySelectorAll('svg.lucide-plus'));
+                    const targetSvg = svgs.find(svg => {
+                        const r = svg.getBoundingClientRect();
+                        return r.top > 300 && r.top < 600 && r.left > 400 && r.left < 800;
+                    });
+                    if (targetSvg) {
+                        const btn = targetSvg.closest('button') || targetSvg.parentElement;
+                        btn.click();
+                        return 'OK_EVAL (svg.lucide-plus found)';
+                    }
+                    return 'NOT_FOUND';
+                }''')
+                print(f"  + 按钮: eval fallback -> {plus_result}")
+                plus_clicked = plus_result.startswith('OK')
+            await page.wait_for_timeout(2000)
+            await screenshot(page, '3_6_plus_menu')
+
+            if plus_clicked:
+                # 点击 "本地上传" 并上传图片
+                try:
+                    async with page.expect_file_chooser(timeout=10000) as fc_info:
+                        upload_clicked = await page.evaluate('''() => {
+                            const all = Array.from(document.querySelectorAll('*'));
+                            const candidates = all.filter(el => {
+                                const text = el.innerText && el.innerText.trim();
+                                if (!text) return false;
+                                return text === '本地上传' || text === '从本地上传';
+                            });
+                            candidates.sort((a, b) => {
+                                return (a.offsetWidth * a.offsetHeight) - (b.offsetWidth * b.offsetHeight);
+                            });
+                            if (candidates.length > 0) {
+                                const el = candidates[0];
+                                el.click();
+                                return 'OK: ' + el.tagName;
+                            }
+                            return 'NOT_FOUND';
+                        }''')
+                        print(f"  本地上传: {upload_clicked}")
+                        if upload_clicked == 'NOT_FOUND':
+                            raise Exception("'本地上传' not found in menu")
+
+                    file_chooser = await fc_info.value
+                    await file_chooser.set_files(ref_image)
+                    print(f"  ✅ 图片已选择: {os.path.basename(ref_image)}")
+
+                    # 等待图片上传完成 (检测缩略图出现)
+                    print("  ⏳ 等待图片上传...")
+                    for wait_i in range(30):
+                        await page.wait_for_timeout(3000)
+                        has_image = await page.evaluate('''() => {
+                            const container = document.querySelector('div[class*="inputContainer"]');
+                            if (!container) return false;
+                            return container.querySelector('img') !== null;
+                        }''')
+                        if has_image:
+                            print(f"  ✅ 图片上传完成 (elapsed: {(wait_i+1)*3}s)")
+                            break
+                        if wait_i > 0 and wait_i % 5 == 0:
+                            print(f"    ⏳ 等待中... ({(wait_i+1)*3}s)")
+                            
+                    # 点击空白处关闭任何弹出的菜单
+                    await page.mouse.click(0, 0)
+
+                except Exception as e:
+                    print(f"  ❌ 图片上传失败: {e}")
+
+            await page.wait_for_timeout(2000)
+            await screenshot(page, '3_6_image_uploaded')
 
         # === Step 4: 选模式 "沉浸式短片" ===
         # 关键: 用 Playwright locator.click() 而不是 JS .click()
@@ -555,6 +662,7 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default="Seedance 2.0",
                         choices=["Seedance 2.0", "Seedance 2.0 Fast"])
     parser.add_argument("--ref-video", type=str, default=None, help="Reference video file path (V2V mode)")
+    parser.add_argument("--ref-image", type=str, default=None, help="Reference image file path (I2V mode)")
     parser.add_argument("--cookies", type=str, default="cookies.json", help="Path to cookies.json")
     parser.add_argument("--output-dir", type=str, default=".", help="Directory to save output video")
     parser.add_argument("--dry-run", action="store_true", help="Only fill form, don't submit")
@@ -567,4 +675,4 @@ if __name__ == "__main__":
     if not os.path.exists(COOKIES_FILE):
         print(f"⚠️ {COOKIES_FILE} not found!")
     else:
-        asyncio.run(run(args.prompt, args.duration, args.ratio, args.model, args.dry_run, args.ref_video))
+        asyncio.run(run(args.prompt, args.duration, args.ratio, args.model, args.dry_run, args.ref_video, args.ref_image))

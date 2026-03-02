@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Python-3.9+-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python 3.9+"/>
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License"/>
   <img src="https://img.shields.io/badge/Platform-macOS%20|%20Linux-lightgrey?style=flat-square&logo=apple&logoColor=white" alt="Platform"/>
-  <img src="https://img.shields.io/badge/Mode-T2V%20|%20V2V-orange?style=flat-square" alt="T2V & V2V"/>
+  <img src="https://img.shields.io/badge/Mode-T2V%20|%20I2V%20|%20V2V-orange?style=flat-square" alt="T2V, I2V & V2V"/>
   <img src="https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square" alt="Production"/>
 </p>
 
@@ -23,6 +23,7 @@
 | 功能 | 描述 |
 |------|------|
 | 🎥 **文生视频 (T2V)** | 输入文字描述，自动生成视频 |
+| 🖼️ **图生视频 (I2V)** | 上传参考图片 + 文字描述，让图片动起来 |
 | 🔄 **参考视频生成 (V2V)** | 上传参考视频 + 风格描述，生成风格转换视频 |
 | 📥 **自动下载** | 通过 thread_id 详情页提取 CDN 链接，curl 直接下载 |
 | 🔐 **Cookie 登录** | 免密登录，支持自定义 cookies 路径 |
@@ -53,6 +54,16 @@ python3 jianying_worker.py \
   --model "Seedance 2.0"
 ```
 
+### 🖼️ 图生视频 (I2V)
+
+```bash
+python3 jianying_worker.py \
+  --ref-image ./test_image.png \
+  --prompt "将这张图片变成动画，镜头从左向右缓慢平移" \
+  --duration 10s \
+  --model "Seedance 2.0 Fast"
+```
+
 ### 🔄 参考视频生成 (V2V)
 
 ```bash
@@ -71,6 +82,7 @@ python3 jianying_worker.py \
 | `--duration` | `10s` | `5s` `10s` `15s` | 视频时长 |
 | `--ratio` | `横屏` | `横屏` `竖屏` `方屏` | 画面比例 |
 | `--model` | `Seedance 2.0` | `Seedance 2.0` `Seedance 2.0 Fast` | 模型选择 |
+| `--ref-image` | — | 本地图片文件路径 | 参考图片 (I2V 模式) |
 | `--ref-video` | — | 本地视频文件路径 | 参考视频 (V2V 模式) |
 | `--cookies` | `cookies.json` | 文件路径 | 登录凭证路径 |
 | `--output-dir` | `.` | 目录路径 | 视频输出目录 |

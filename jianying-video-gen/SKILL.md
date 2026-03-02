@@ -1,6 +1,6 @@
 ---
 name: jianying-video-gen
-description: 使用剪映(Jianying/小云雀)的 Seedance 2.0 模型自动生成AI视频。支持文生视频(T2V)和参考视频生成(V2V)两种模式。当用户需要生成AI视频、使用Seedance模型创作短片、或基于参考视频进行风格转换时使用此技能。需要预先配置 cookies.json 登录凭证。
+description: 使用剪映(Jianying/小云雀)的 Seedance 2.0 模型自动生成AI视频。支持文生视频(T2V)、图生视频(I2V)和参考视频生成(V2V)三种模式。当用户需要生成AI视频、使用Seedance模型创作短片、或基于参考图像/视频进行风格转换时使用此技能。需要预先配置 cookies.json 登录凭证。
 ---
 
 # 剪映 AI 视频生成器
@@ -34,6 +34,18 @@ python3 scripts/jianying_worker.py \
   --model "Seedance 2.0"
 ```
 
+### 图生视频 (I2V)
+
+```bash
+python3 scripts/jianying_worker.py \
+  --cookies /path/to/cookies.json \
+  --output-dir /path/to/output \
+  --ref-image /path/to/image.png \
+  --prompt "将这张图片变成动画，镜头从左向右缓慢平移" \
+  --duration 10s \
+  --model "Seedance 2.0 Fast"
+```
+
 ### 参考视频生成 (V2V)
 
 ```bash
@@ -62,6 +74,7 @@ python3 scripts/jianying_worker.py --cookies /path/to/cookies.json --prompt "测
 | `--duration` | `10s` | `5s`, `10s`, `15s` | 视频时长 |
 | `--ratio` | `横屏` | `横屏`, `竖屏`, `方屏` | 画面比例 |
 | `--model` | `Seedance 2.0` | `Seedance 2.0`, `Seedance 2.0 Fast` | 模型选择 |
+| `--ref-image` | 无 | 本地图片路径 | I2V 模式的参考图片 |
 | `--ref-video` | 无 | 本地视频路径 | V2V 模式的参考视频 |
 | `--cookies` | `cookies.json` | 文件路径 | 剪映登录凭证路径 |
 | `--output-dir` | `.` | 目录路径 | 输出视频保存目录 |
