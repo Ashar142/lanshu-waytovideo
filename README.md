@@ -41,14 +41,21 @@
 2. 使用 [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie) 等扩展导出 cookies
 3. 将文件保存为 `cookies.json` 放置在 Agent 运行目录下。
 
-### 2. 在 OpenClaw / Claude Code 中使用
+### 2. 作为 AI Agent Skill 安装
 
-直接让 Agent 挂载 `jianying-video-gen` 目录即可。当你在对话中输入以下 prompt 时，Agent 就会自动调用该技能：
+本项目完美支持 OpenClaw、Claude Code 等 AI 编码智能体框架。推荐使用 [openskills](https://github.com/openclaw/openskills) CLI 进行一键安装：
+
+```bash
+# 全局安装该技能，供所有 Agent 项目使用
+openskills install https://github.com/cclank/lanshu-waytovideo.git -g
+```
+
+安装完成后，在你的对话界面中直接向 Agent 下达自然语言指令即可：
 
 > **User**: "帮我生成一段赛博朋克风格的视频，10秒横屏。"
-> **OpenClaw/Claude**: (自动分析意图 -> 识别出需要视频生成 -> 隐式调用 `jianying_worker.py` -> 自动轮询 -> 最终返回已下载好的 mp4 文件路径给你)
+> **Agent**: (自动分析意图 -> 命中 `jianying-video-gen` 技能 -> 隐式调用后台脚本与 Playwright 操作 -> 最终交付已下载好的 MP4 文件)
 
-*注意：Agent 运行环境需已安装 Python 3.9+、`playwright` 并执行过 `playwright install chromium`。*
+*注意：Agent 运行的基础宿主机环境（通常是你本地）仍需安装 Python 3.9+ 环境，并使用 `pip install playwright && playwright install chromium` 安装浏览器内核。*
 
 ---
 
