@@ -44,7 +44,7 @@
 ### 2. 作为 AI Agent Skill 安装
 
 #### 一、标准安装（荐）：
-建议参考使用类似方式安装（注意我们的skill在里面一层）：
+建议参考使用类似方式安装：
 
 ```bash
 npx skills add https://github.com/cclank/lanshu-waytovideo --skill jianying-video-gen
