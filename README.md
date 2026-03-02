@@ -48,7 +48,7 @@ playwright install chromium
 ### ▶️ 文生视频 (T2V)
 
 ```bash
-python3 jianying_worker.py \
+python3 jianying-video-gen/scripts/jianying_worker.py \
   --prompt "巨龙从火山口腾空而起，熔岩四溅，电影级航拍" \
   --duration 10s \
   --model "Seedance 2.0"
@@ -57,7 +57,7 @@ python3 jianying_worker.py \
 ### 🖼️ 图生视频 (I2V)
 
 ```bash
-python3 jianying_worker.py \
+python3 jianying-video-gen/scripts/jianying_worker.py \
   --ref-image ./test_image.png \
   --prompt "将这张图片变成动画，镜头从左向右缓慢平移" \
   --duration 10s \
@@ -67,7 +67,7 @@ python3 jianying_worker.py \
 ### 🔄 参考视频生成 (V2V)
 
 ```bash
-python3 jianying_worker.py \
+python3 jianying-video-gen/scripts/jianying_worker.py \
   --ref-video ./reference.mp4 \
   --prompt "画风改成宫崎骏风格，其他不变" \
   --duration 10s \
@@ -157,15 +157,15 @@ graph LR
 
 ```
 lanshu-waytovideo/
-├── jianying_worker.py              # 主脚本
-├── cookies.json                    # 登录凭证 (需自行导出)
-├── requirements.txt                # Python 依赖
-└── jianying-video-gen/             # AI Agent Skill 包
+├── cookies.json                    # 登录凭证 (需自行导出，勿提交)
+├── README.md                       # 使用说明
+└── jianying-video-gen/             # AI Agent Skill 主目录
     ├── SKILL.md                    # 技能说明文档
+    ├── requirements.txt            # Python 依赖
     ├── scripts/
-    │   └── jianying_worker.py      # 脚本副本
+    │   └── jianying_worker.py      # 主发版自动化脚本
     └── references/
-        └── prompt-guide.md         # 提示词汇指南
+        └── prompt-guide.md         # 提示词编写指南
 ```
 
 ## 🤖 作为 AI Agent Skill 使用
